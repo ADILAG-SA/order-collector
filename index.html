@@ -1,0 +1,416 @@
+<html>
+<head>
+  <title>سیستم جمع‌آوری سفارش‌ها - نسخه حرفه‌ای</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    
+    body {
+      font-family: 'Vazir', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      text-align: center;
+      padding: 20px;
+      direction: rtl;
+      margin: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+    h2 {
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+    #orderInfo {
+      font-size: 18px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #2c2c2c;
+      border-radius: 8px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    #progressBar {
+      background-color: #333;
+      border-radius: 5px;
+      height: 8px;
+      margin-bottom: 15px;
+    }
+    #progress {
+      background-color: #4CAF50;
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+    #scanInput {
+      width: 90%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #333;
+      color: #e0e0e0;
+      border: 1px solid #444;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #submitBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #submitBtn:hover {
+      background-color: #45a049;
+    }
+    #skipBtn {
+      background-color: #FFC107;
+      color: #121212;
+    }
+    #skipBtn:hover {
+      background-color: #FFA000;
+    }
+    #backBtn {
+      background-color: #2196F3;
+      color: white;
+    }
+    #backBtn:hover {
+      background-color: #1E88E5;
+    }
+    #resetBtn {
+      background-color: #F44336;
+      color: white;
+    }
+    #resetBtn:hover {
+      background-color: #E53935;
+    }
+    #logsToggle {
+      background-color: #9E9E9E;
+      color: #121212;
+      margin-top: 20px;
+    }
+    #logsToggle:hover {
+      background-color: #757575;
+    }
+    #logsSection {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #2c2c2c;
+      border-radius: 8px;
+      text-align: right;
+    }
+    #logsSection ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    #logsSection li {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #333;
+      border-radius: 5px;
+    }
+    #message {
+      color: #FF5252;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    #logoHeader {
+  position: sticky;
+  top: 0;
+  background-color: #121212;
+  padding: 15px 0;
+  text-align: center;
+  z-index: 1000;
+  border-bottom: 1px solid #333;
+}
+
+#logoImage {
+  max-width: 120px;
+  width: 20%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+  transition: transform 0.3s ease;
+}
+
+#logoImage:hover {
+  transform: scale(1.05);
+}
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+    }
+    .modal-content {
+      background-color: #2c2c2c;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 400px;
+      text-align: right;
+    }
+    .modal-content select, .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #333;
+      color: #e0e0e0;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+    .modal-content button {
+      margin: 10px 5px;
+    }
+    .order-card {
+  background-color: #2c2c2c;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #e0e0e0;
+}
+
+.order-row .label {
+  font-weight: bold;
+  color: #a5d6a7;
+}
+
+.order-row .value {
+  color: #fff;
+}
+  </style>
+    <img src="https://s6.uupload.ir/files/screenshot_2025-08-14_193634_i2p3.png" alt="لوگو سیستم" id="logoImage">
+</head>
+<body>
+  <div class="container">
+    <h2>سیستم جمع‌آوری سفارش‌ها</h2>
+    <div id="orderInfo">در حال لود...</div>
+    <div id="progressBar"><div id="progress" style="width: 0%;"></div></div>
+    <input type="text" id="scanInput" placeholder="سریال را اسکن یا وارد کنید" autofocus>
+    <div class="button-group">
+      <button id="submitBtn" onclick="submitScan()">ارسال</button>
+      <button id="skipBtn" onclick="openSkipModal()">رد کردن سریال</button>
+      <button id="backBtn" onclick="backToPrevious()">بازگشت به قبلی</button>
+      <button id="resetBtn" onclick="resetOrder()">ریست سفارش</button>
+    </div>
+    <div id="message"></div>
+    <button id="logsToggle" onclick="toggleLogs()">نمایش/مخفی کردن لاگ‌ها</button>
+    <div id="logsSection">
+      <h3>لاگ‌های اخیر:</h3>
+      <ul id="logsList"></ul>
+    </div>
+  </div>
+
+  <div id="skipModal" class="modal">
+    <div class="modal-content">
+      <h3>دلیل رد کردن سریال</h3>
+      <select id="skipReason" onchange="toggleCustomReason()">
+        <option value="یافت نشد">یافت نشد</option>
+        <option value="مغایرت">مغایرت</option>
+        <option value="آسیب دیده">آسیب دیده</option>
+        <option value="تکراری">تکراری</option>
+        <option value="سایر">سایر</option>
+      </select>
+      <input type="text" id="customReason" placeholder="دلیل دیگر را وارد کنید" style="display: none;">
+      <button onclick="confirmSkip()">تأیید</button>
+      <button onclick="closeSkipModal()">لغو</button>
+    </div>
+  </div>
+
+  <script>
+    let currentOrder = null;
+    let currentSerialIndex = 0;
+    let logs = [];
+
+    function loadNextOrder() {
+      document.getElementById('orderInfo').innerHTML = 'در حال لود سفارش...';
+      document.getElementById('scanInput').value = '';
+      document.getElementById('message').innerHTML = '';
+      updateProgress(0);
+      google.script.run.withSuccessHandler(onOrderLoaded).withFailureHandler(onError).getNextOrder();
+    }
+
+    function onOrderLoaded(order) {
+      if (!order) {
+        document.getElementById('orderInfo').innerHTML = 'همه سفارش‌ها پردازش شده‌اند!';
+        document.getElementById('scanInput').style.display = 'none';
+        document.querySelector('.button-group').style.display = 'none';
+        return;
+      }
+      currentOrder = order;
+      currentSerialIndex = 0;
+      showCurrentSerial();
+    }
+
+    function showCurrentSerial() {
+      if (!currentOrder || !currentOrder.serials[currentSerialIndex]) {
+        document.getElementById('message').innerHTML = 'خطا در لود سریال!';
+        return;
+      }
+      const serial = currentOrder.serials[currentSerialIndex];
+      const address = currentOrder.addresses[currentSerialIndex] || 'نامشخص';
+      document.getElementById('orderInfo').innerHTML = `
+  <div class="order-card">
+    <div class="order-row">
+      <span class="label">🏷️ شماره سفارش:</span>
+      <span class="value">${currentOrder.orderNumber}</span>
+    </div>
+    <div class="order-row">
+      <span class="label">🔢 سریال (${currentSerialIndex + 1} از ${currentOrder.serials.length}):</span>
+      <span class="value">${serial}</span>
+    </div>
+    <div class="order-row">
+      <span class="label">📍 آدرس:</span>
+      <span class="value">${address}</span>
+    </div>
+  </div>
+`;
+
+      document.getElementById('scanInput').value = '';
+      document.getElementById('scanInput').focus();
+      document.getElementById('message').innerHTML = '';
+      updateProgress((currentSerialIndex / currentOrder.serials.length) * 100);
+    }
+
+    function updateProgress(percent) {
+      document.getElementById('progress').style.width = percent + '%';
+    }
+
+    function submitScan() {
+      const scanned = document.getElementById('scanInput').value.trim();
+      const expected = currentOrder.serials[currentSerialIndex].trim();
+      
+      if (scanned === expected) {
+        currentSerialIndex++;
+        if (currentSerialIndex >= currentOrder.serials.length) {
+          google.script.run.withSuccessHandler(onLogUpdated).withFailureHandler(onError).updateLog(currentOrder.row, 'جمع‌آوری شده');
+        } else {
+          showCurrentSerial();
+        }
+      } else {
+        document.getElementById('message').innerHTML = 'سریال اشتباه است! دوباره امتحان کنید.';
+        document.getElementById('scanInput').value = '';
+        document.getElementById('scanInput').focus();
+      }
+    }
+
+    function openSkipModal() {
+      document.getElementById('skipModal').style.display = 'block';
+      document.getElementById('customReason').style.display = 'none';
+      document.getElementById('skipReason').value = 'یافت نشد';
+    }
+
+    function closeSkipModal() {
+      document.getElementById('skipModal').style.display = 'none';
+    }
+
+    function toggleCustomReason() {
+      const reason = document.getElementById('skipReason').value;
+      document.getElementById('customReason').style.display = reason === 'سایر' ? 'block' : 'none';
+    }
+
+    function confirmSkip() {
+      let reason = document.getElementById('skipReason').value;
+      if (reason === 'سایر') {
+        reason = document.getElementById('customReason').value.trim() || 'سایر';
+      }
+      currentSerialIndex++;
+      if (currentSerialIndex >= currentOrder.serials.length) {
+        google.script.run.withSuccessHandler(onLogUpdated).withFailureHandler(onError).updateLog(currentOrder.row, reason);
+      } else {
+        showCurrentSerial();
+      }
+      closeSkipModal();
+    }
+
+    function backToPrevious() {
+      if (currentSerialIndex > 0) {
+        currentSerialIndex--;
+        showCurrentSerial();
+      } else {
+        document.getElementById('message').innerHTML = 'نمی‌توان به عقب‌تر رفت!';
+      }
+    }
+
+    function resetOrder() {
+      if (confirm('آیا مطمئن هستید که می‌خواهید سفارش را ریست کنید؟')) {
+        currentSerialIndex = 0;
+        showCurrentSerial();
+      }
+    }
+
+    function onLogUpdated(logMessage) {
+      logs.push(logMessage);
+      updateLogsDisplay();
+      loadNextOrder();
+    }
+
+    function toggleLogs() {
+      const logsSection = document.getElementById('logsSection');
+      logsSection.style.display = logsSection.style.display === 'block' ? 'none' : 'block';
+      if (logsSection.style.display === 'block') {
+        google.script.run.withSuccessHandler(updateLogs).withFailureHandler(onError).getRecentLogs();
+      }
+    }
+
+    function updateLogs(recentLogs) {
+      logs = recentLogs.map(log => `سفارش ${log.orderNumber}: ${log.log}`);
+      updateLogsDisplay();
+    }
+
+    function updateLogsDisplay() {
+      const logsList = document.getElementById('logsList');
+      logsList.innerHTML = '';
+      logs.forEach(log => {
+        const li = document.createElement('li');
+        li.textContent = log;
+        logsList.appendChild(li);
+      });
+    }
+
+    function onError(error) {
+      document.getElementById('message').innerHTML = 'خطا: ' + error.message;
+    }
+
+    document.getElementById('scanInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        submitScan();
+      }
+    });
+
+    loadNextOrder();
+  </script>
+</body>
+</html>
