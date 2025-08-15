@@ -59,3 +59,17 @@ function getRecentLogs() {
   }
   return logs;
 }
+fetch("https://script.google.com/macros/s/AKfycbx.../exec")
+  .then(response => response.json())
+  .then(data => {
+    console.log("Data from Google Sheets:", data);
+    // مثلاً نمایش در صفحه:
+    document.body.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+  })
+  .catch(error => console.error("Error fetching data:", error));
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("report");
+  var data = sheet.getDataRange().getValues();
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+
